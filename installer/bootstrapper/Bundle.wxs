@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal">
+  <Bundle Name="LOKAL Setup"
+          Manufacturer="Keith Renz D. Romblon and Camille R. Ramilo"
+          Version="1.0.0.0"
+          UpgradeCode="{4B959DDA-7EFD-4F7E-83A8-8EF7321B50A4}"
+          Copyright="Copyright (c) 2026 Keith Renz D. Romblon and Camille R. Ramilo"
+          IconSourceFile="$(LokalIcon)"
+          Compressed="yes">
+    <BootstrapperApplication>
+      <bal:WixStandardBootstrapperApplication
+          Theme="rtfLargeLicense"
+          LicenseFile="$(LicenseFile)"
+          LogoFile="$(LokalLogo)"
+          ShowVersion="yes"
+          SuppressOptionsUI="yes" />
+    </BootstrapperApplication>
+
+    <Chain>
+      <MsiPackage Id="LokalPowerPointAddIn"
+                  SourceFile="$(PowerPointMsi)"
+                  Visible="yes"
+                  Vital="yes" />
+      <MsiPackage Id="LokalServerStatus"
+                  SourceFile="$(TrayMsi)"
+                  Visible="yes"
+                  Vital="yes" />
+      <!-- The local-server package will be inserted here after its Program
+           Files/service MSI is authored. That package also owns
+           the server executable and Windows service. LOKAL.Tray.exe is
+           already installed by the status package above. Do not chain the
+           unversioned repository executables directly: doing so would omit
+           web/assets and safe service rollback behavior. -->
+    </Chain>
+  </Bundle>
+</Wix>

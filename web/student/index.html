@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LOKAL — Join Class</title>
+    <meta name="description" content="Join your LOKAL class and participate in interactive activities">
+    <link rel="stylesheet" href="/shared/css/variables.css">
+    <link rel="stylesheet" href="css/student.css?v=3">
+    <link rel="icon" type="image/png" href="/shared/assets/favicon-32x32.png">
+</head>
+<body>
+    <!-- Join Screen -->
+    <div id="join-screen" class="join-screen">
+        <div class="join-bg">
+            <div class="join-bg-overlay"></div>
+        </div>
+        <div class="join-card" id="join-card">
+            <!-- Step 1: Enter Code -->
+            <div id="step-code" class="join-step">
+                <div class="join-logo">
+                    <img src="/shared/assets/android-chrome-512x512.png" alt="LOKAL Logo" width="110" height="110" style="margin-bottom:10px;">
+                    <h1>LOKAL</h1>
+                </div>
+                <div class="join-input-group">
+                    <input type="text" id="class-code-input" class="join-input" placeholder="Class code"
+                        maxlength="8" autocomplete="off" autofocus>
+                    <div class="input-error" id="code-error"></div>
+                </div>
+                <button class="join-submit-btn" id="code-submit-btn" onclick="submitClassCode()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
+                </button>
+                <div class="join-footer">Made with ❤️ by Keith and Camille</div>
+            </div>
+
+            <!-- Step 2: Enter Name -->
+            <div id="step-name" class="join-step" style="display:none">
+                <div class="join-class-info">
+                    <span class="join-code-label">Class code</span>
+                    <span class="join-code-value" id="display-code"></span>
+                </div>
+                <div class="join-avatar-wrapper" onclick="document.getElementById('avatar-input').click()">
+                    <div class="join-avatar" id="student-avatar-upload">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M6 21v-1a6 6 0 0 1 12 0v1"/>
+                        </svg>
+                    </div>
+                    <div class="join-avatar-edit-icon">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                    </div>
+                    <img id="avatar-preview" src="" alt="" style="display:none; width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                </div>
+                <input type="file" id="avatar-input" accept="image/*" style="display: none;" onchange="handleAvatarSelect(event)">
+                <div class="join-input-group">
+                    <input type="text" id="student-name-input" class="join-input" placeholder="Your name"
+                        maxlength="30" autocomplete="off">
+                    <div class="input-error" id="name-error"></div>
+                </div>
+                <button class="join-go-btn" onclick="submitStudentName()">Let's go!</button>
+                <div class="join-footer">Made with ❤️ by Keith and Camille</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Dashboard (after joining) -->
+    <div id="student-dashboard" class="dark-theme" style="display:none">
+        <!-- Header -->
+        <header class="cp-header" style="justify-content: center; position: relative;">
+            <div class="cp-header-left" style="position: absolute; left: 16px; top: 0; bottom: 0; display: flex; align-items: center;">
+                <img src="/shared/assets/android-chrome-512x512.png" alt="LOKAL Logo" width="36" height="36" style="border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+            </div>
+            <div class="cp-header-center" style="display: flex; align-items: center; gap: 8px;">
+                <span style="color: #999;">Class code:</span>
+                <div class="cp-code-badges" id="code-badges" style="font-size: 1.2rem; font-weight: bold; color: white;"></div>
+            </div>
+            <div class="cp-header-right" style="position: absolute; right: 16px; top: 0; bottom: 0; display: flex; align-items: center; gap: 12px;">
+                <div class="dropdown">
+                    <button class="cp-menu-btn menu-icon" onclick="toggleStudentMenu()">
+                        <svg class="menu-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line class="menu-icon" x1="3" y1="12" x2="21" y2="12"/><line class="menu-icon" x1="3" y1="6" x2="21" y2="6"/><line class="menu-icon" x1="3" y1="18" x2="21" y2="18"/></svg>
+                    </button>
+                    <div id="student-dropdown-menu" class="dropdown-content">
+                        <button class="dropdown-item" onclick="studentLogout()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                            Logout (Leave Class)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Area -->
+        <div class="cp-body">
+            <!-- Slide View (left) -->
+            <div class="cp-slide-area" id="slide-area">
+                <div class="cp-slide-wrapper">
+                    <div class="cp-slide-container">
+                        <div id="slide-content" class="cp-slide-content">
+                            <!-- Waiting / Activity content -->
+                        </div>
+                        <button id="save-slide-btn" class="save-slide-btn" type="button"
+                            onclick="saveCurrentSlide()" aria-label="Save the current slide"
+                            title="Save slide" hidden>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <path d="M12 3v12"></path>
+                                <path d="m7 10 5 5 5-5"></path>
+                                <path d="M5 21h14"></path>
+                            </svg>
+                            <span>Save slide</span>
+                        </button>
+                    </div>
+                    <div class="cp-teacher-strip" id="teacher-strip">
+                        <!-- Teacher profile strip -->
+                    </div>
+                </div>
+                <div class="cp-student-strip" id="student-strip">
+                    <!-- Dynamic profile strip -->
+                </div>
+            </div>
+
+            <!-- Sidebar (right) -->
+            <div class="cp-sidebar" id="student-sidebar">
+                <div id="sidebar-content" class="cp-sidebar-content">
+                    <!-- Dynamic content: activity answers -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Edit Avatar Modal -->
+    <div id="edit-avatar-modal" class="avatar-modal" style="display:none">
+        <div class="avatar-modal-content">
+            <div class="avatar-modal-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>Edit avatar</span>
+                <button class="close-btn" onclick="closeAvatarModal()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+            </div>
+            <div class="avatar-crop-container">
+                <canvas id="avatar-canvas" width="250" height="250"></canvas>
+                <div class="crop-overlay"></div>
+            </div>
+            <div class="avatar-zoom-controls">
+                <span>-</span>
+                <input type="range" id="avatar-zoom" min="1" max="3" step="0.01" value="1">
+                <span>+</span>
+            </div>
+            <div class="avatar-modal-footer">
+                <button class="btn-text" onclick="document.getElementById('avatar-input').click()">Change</button>
+                <button class="btn-primary" onclick="saveAvatar()">Save</button>
+                <button class="btn-text danger" onclick="resetAvatar()">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js?v=2"></script>
+    <script src="js/app.js?v=5"></script>
+</body>
+</html>

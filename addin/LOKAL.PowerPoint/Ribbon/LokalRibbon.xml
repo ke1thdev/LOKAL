@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="Ribbon_Load">
+  <ribbon>
+    <tabs>
+      <!-- Match Inknoe ClassPoint tab label -->
+      <tab id="LokalTab" label="LOKAL" insertAfterMso="TabView">
+
+        <!-- Me Group -->
+        <group id="grpMe" label="Me">
+          <menu id="mnuProfile" getLabel="GetProfileLabel" getImage="GetProfileImage" getVisible="GetVisibleLoggedIn" size="large">
+            <button id="btnMyAccount" label="My Account" imageMso="ContactPicture" onAction="OnMyAccount"/>
+            <button id="btnLogout" label="Sign Out" imageMso="CancelRequest" onAction="OnLogout"/>
+          </menu>
+          <button id="btnSignIn" label="Sign In" imageMso="ContactPicture" getVisible="GetVisibleLoggedOut" size="large" onAction="OnSignIn"/>
+        </group>
+
+        <!-- Add quiz Group -->
+        <group id="grpAddQuiz" label="Add quiz">
+          <button id="btnMultipleChoice" label="Multiple Choice" size="large"
+                  getImage="GetRibbonImage" onAction="OnMultipleChoice" />
+          <button id="btnWordCloud" label="Word Cloud" size="large"
+                  getImage="GetRibbonImage" onAction="OnWordCloud" />
+          <button id="btnShortAnswer" label="Short Answer" size="large"
+                  getImage="GetRibbonImage" onAction="OnShortAnswer" />
+          <button id="btnSlideDrawing" label="Slide Drawing" size="large"
+                  getImage="GetRibbonImage" onAction="OnSlideDrawing" />
+          <button id="btnImageUpload" label="Image Upload" size="large"
+                  getImage="GetRibbonImage" onAction="OnImageUpload" />
+          <button id="btnFillBlanks" label="Fill in the Blanks" size="large"
+                  getImage="GetRibbonImage" onAction="OnFillBlanks" />
+          <button id="btnAudioRecord" label="Audio Record" size="large"
+                  getImage="GetRibbonImage" onAction="OnAudioRecord" />
+          <button id="btnVideoUpload" label="Video Upload" size="large"
+                  getImage="GetRibbonImage" onAction="OnVideoUpload" />
+          <button id="btnQuickIdeas" label="Quiz Ideas" size="large"
+                  getImage="GetRibbonImage" onAction="OnQuickIdeas" />
+        </group>
+
+        <!-- More Group -->
+        <group id="grpMore" label="More">
+          <box id="boxMoreCol1" boxStyle="vertical">
+            <button id="btnSelectClass" label="Select Class" size="normal"
+                    imageMso="ContactAddressBook" onAction="OnSelectClass" />
+            <button id="btnMyClasses" label="My Classes" size="normal"
+                    imageMso="ContactAddressBook" onAction="OnMyClasses" />
+            <button id="btnReports" label="Reports" size="normal"
+                    imageMso="CreateReport" onAction="OnReports" />
+          </box>
+          <box id="boxMoreCol2" boxStyle="vertical">
+            <button id="btnSettings" label="Settings" size="normal"
+                    imageMso="PropertySheet" onAction="OnSettings" />
+          </box>
+          
+          <separator id="sepMore"/>
+          
+          <box id="boxMoreCol3" boxStyle="vertical">
+            <menu id="mnuMoreFeatures" label="More features" size="normal"
+                  imageMso="AdpStoredProcedureNewFromToolbar">
+              <button id="btnTimer" label="Timer" imageMso="AccessTimerInsert" onAction="OnTimer"/>
+              <button id="btnNamePicker" label="Name Picker" imageMso="ContactCardMenu" onAction="OnNamePicker"/>
+              <button id="btnQuickPoll" label="Quick Poll" imageMso="PivotChartType" onAction="OnQuickPoll"/>
+              <button id="btnLeaderboard" label="Leaderboard" getImage="GetRibbonImage" onAction="OnLeaderboard"/>
+            </menu>
+            <menu id="mnuReset" label="Reset" size="normal" imageMso="RecoverInviteDecline">
+              <button id="btnDeleteResponses" label="Delete All Responses" onAction="OnDeleteAllResponses"/>
+              <button id="btnDeleteAnnotations" label="Delete All Annotations" onAction="OnDeleteAnnotations"/>
+            </menu>
+            <menu id="mnuHelp" label="Get help" size="normal" imageMso="Help">
+              <button id="btnTutorials" label="Tutorials" onAction="OnMyClasses"/>
+            </menu>
+          </box>
+        </group>
+
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>

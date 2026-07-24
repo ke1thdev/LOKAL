@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="LOKAL Server Status"
+           Manufacturer="Keith Renz D. Romblon and Camille R. Ramilo"
+           Version="1.0.0.0"
+           UpgradeCode="{FE27D8EE-36EA-4D67-BF5F-A80BC089B47E}"
+           Scope="perMachine"
+           Compressed="yes">
+    <SummaryInformation Description="LOKAL hybrid classroom server tray and status application"
+                        Manufacturer="Keith Renz D. Romblon and Camille R. Ramilo" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of LOKAL Server Status is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="LOKAL" />
+    </StandardDirectory>
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ProgramMenuLokalFolder" Name="LOKAL" />
+    </StandardDirectory>
+
+    <ComponentGroup Id="TrayApplicationComponents" Directory="INSTALLFOLDER">
+      <Component Id="TrayExecutableComponent" Guid="{AEFC3F65-D11E-505C-BA42-A3E485ABF8DC}">
+        <File Id="TrayExecutable" Source="$(TrayExecutable)" KeyPath="yes" />
+      </Component>
+      <Component Id="TrayAutoStartComponent" Guid="{12C749EA-E5DA-5B8B-AD00-EF8D639CE79D}">
+        <RegistryValue Root="HKCU"
+                       Key="Software\Microsoft\Windows\CurrentVersion\Run"
+                       Name="LOKAL Server Status"
+                       Value="&quot;[INSTALLFOLDER]LOKAL.Tray.exe&quot; --background"
+                       Type="string"
+                       KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="TrayShortcutComponents" Directory="ProgramMenuLokalFolder">
+      <Component Id="TrayShortcutComponent" Guid="{B068D6F4-3A10-5964-B9CF-FA7F135782D8}">
+        <Shortcut Id="TrayStartMenuShortcut"
+                  Name="LOKAL Server Status"
+                  Description="View and control the LOKAL hybrid classroom server"
+                  Target="[INSTALLFOLDER]LOKAL.Tray.exe"
+                  WorkingDirectory="INSTALLFOLDER" />
+        <RemoveFolder Id="RemoveProgramMenuLokalFolder" On="uninstall" />
+        <RegistryValue Root="HKCU"
+                       Key="Software\LOKAL\Installer"
+                       Name="TrayShortcut"
+                       Value="1"
+                       Type="integer"
+                       KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <Feature Id="TrayFeature" Title="LOKAL Server Status" Level="1">
+      <ComponentGroupRef Id="TrayApplicationComponents" />
+      <ComponentGroupRef Id="TrayShortcutComponents" />
+    </Feature>
+  </Package>
+</Wix>

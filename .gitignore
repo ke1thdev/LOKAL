@@ -1,0 +1,117 @@
+# LOKAL repository hygiene
+#
+# Keep source, documentation, templates, and build scripts in Git.
+# Keep secrets, private classroom data, machine-specific state, and generated
+# installers/binaries outside Git history.
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+!*.env.example
+config/*.env
+!config/*.env.example
+*.secret
+*.secrets
+secrets/
+
+# Private keys, certificates, and signing material
+*.key
+*.pem
+*.pfx
+*.p12
+*.cer
+*.crt
+*.der
+*.snk
+
+# Runtime databases and state
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.sqlite-shm
+*.sqlite-wal
+data/
+runtime/
+
+# User-provided and generated uploads
+uploads/*
+!uploads/.gitkeep
+
+# Logs, crash reports, and local diagnostics
+logs/
+*.log
+*.dmp
+*.stackdump
+slide_error.txt
+
+# Local smoke-test and Codex work directories
+.codex-smoke-*/
+.agents/
+.codex/
+
+# Go build and test output
+*.test
+*.out
+coverage/
+coverage.*
+/lokal.exe
+/lokal.*.exe
+/lokal-*.exe
+
+# .NET / Visual Studio build output and user settings
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+TestResults/
+
+# WiX and installer output
+.wix/
+artifacts/
+release-local/
+*.msi
+*.msix
+*.msm
+*.msp
+*.wixpdb
+*.cab
+*.exe
+*.dll
+*.pdb
+
+# NuGet packages restored locally
+packages/
+*.nupkg
+
+# IDE and editor files
+.idea/
+.vscode/
+*.code-workspace
+*.swp
+*.swo
+*~
+
+# Operating-system metadata
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# Temporary and backup files
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.old
+*.orig
+
+# Local-only thesis/development task notes
+task.md
+

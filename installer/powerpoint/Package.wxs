@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:iis="http://wixtoolset.org/schemas/v4/wxs/iis">
+  <Package Name="LOKAL PowerPoint Add-in"
+           Manufacturer="LOKAL Thesis Project"
+           Version="1.0.0"
+           UpgradeCode="{D662568C-584F-4FE9-AC14-36160587A8B8}"
+           Scope="perMachine">
+    <SummaryInformation Description="Installs and registers the LOKAL VSTO add-in for Microsoft PowerPoint."
+                        Manufacturer="LOKAL Thesis Project" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of the LOKAL PowerPoint Add-in is already installed." />
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+    <Property Id="NETFRAMEWORK_RELEASE">
+      <RegistrySearch Id="SearchNetFrameworkRelease"
+                      Root="HKLM"
+                      Key="SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full"
+                      Name="Release"
+                      Type="raw"
+                      Bitness="always64" />
+    </Property>
+    <Property Id="POWERPOINT64_PATH">
+      <RegistrySearch Id="SearchPowerPoint64"
+                      Root="HKLM"
+                      Key="SOFTWARE\Microsoft\Office\16.0\PowerPoint\InstallRoot"
+                      Name="Path"
+                      Type="raw"
+                      Bitness="always64" />
+    </Property>
+    <Property Id="POWERPOINT32_PATH">
+      <RegistrySearch Id="SearchPowerPoint32"
+                      Root="HKLM"
+                      Key="SOFTWARE\Microsoft\Office\16.0\PowerPoint\InstallRoot"
+                      Name="Path"
+                      Type="raw"
+                      Bitness="always32" />
+    </Property>
+    <Property Id="VSTO_RUNTIME_VERSION">
+      <RegistrySearch Id="SearchVstoRuntime"
+                      Root="HKLM"
+                      Key="SOFTWARE\Microsoft\VSTO Runtime Setup\v4R"
+                      Name="Version"
+                      Type="raw"
+                      Bitness="always32" />
+    </Property>
+
+    <Launch Condition="Installed OR NETFRAMEWORK_RELEASE"
+            Message="LOKAL requires Microsoft .NET Framework 4.7.2 or newer." />
+    <Launch Condition="Installed OR POWERPOINT64_PATH OR POWERPOINT32_PATH"
+            Message="LOKAL requires a desktop installation of Microsoft PowerPoint 2016 or newer." />
+    <Launch Condition="Installed OR VSTO_RUNTIME_VERSION"
+            Message="LOKAL requires Microsoft Visual Studio Tools for Office Runtime (VSTO)." />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="LokalCompanyFolder" Name="LOKAL">
+        <Directory Id="INSTALLFOLDER" Name="PowerPoint Add-in" />
+      </Directory>
+    </StandardDirectory>
+
+    <Feature Id="MainFeature" Title="LOKAL PowerPoint Add-in" Level="1">
+      <ComponentGroupRef Id="AddinPayload" />
+      <ComponentRef Id="PowerPointRegistration64" />
+      <ComponentRef Id="PowerPointRegistration32" />
+      <ComponentRef Id="DevelopmentCertificateTrust" />
+    </Feature>
+  </Package>
+
+  <Fragment>
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component Id="PowerPointRegistration64" Guid="*" Bitness="always64">
+        <RegistryKey Root="HKLM" Key="Software\Microsoft\Office\PowerPoint\Addins\LOKAL.PowerPoint">
+          <RegistryValue Name="Description" Type="string"
+                         Value="LOKAL hybrid classroom PowerPoint add-in" />
+          <RegistryValue Name="FriendlyName" Type="string" Value="LOKAL" />
+          <RegistryValue Name="Manifest" Type="string"
+                         Value="file:///[#FileMainVsto]|vstolocal" />
+          <RegistryValue Name="LoadBehavior" Type="integer" Value="3" KeyPath="yes" />
+        </RegistryKey>
+      </Component>
+
+      <Component Id="PowerPointRegistration32" Guid="*" Bitness="always32">
+        <RegistryKey Root="HKLM" Key="Software\Microsoft\Office\PowerPoint\Addins\LOKAL.PowerPoint">
+          <RegistryValue Name="Description" Type="string"
+                         Value="LOKAL hybrid classroom PowerPoint add-in" />
+          <RegistryValue Name="FriendlyName" Type="string" Value="LOKAL" />
+          <RegistryValue Name="Manifest" Type="string"
+                         Value="file:///[#FileMainVsto]|vstolocal" />
+          <RegistryValue Name="LoadBehavior" Type="integer" Value="3" KeyPath="yes" />
+        </RegistryKey>
+      </Component>
+
+      <!-- The current VSTO manifests are signed with a self-signed development
+           certificate. Only its public certificate is embedded; the private key
+           is never included. Replace this certificate before public distribution. -->
+      <Component Id="DevelopmentCertificateTrust" Guid="{F93E66F1-EF11-47CA-AB4C-69079D13A090}">
+        <iis:Certificate Id="LokalDevelopmentRoot"
+                         Name="LOKAL Development Root"
+                         BinaryRef="LokalDevCert"
+                         StoreLocation="localMachine"
+                         StoreName="root" />
+        <iis:Certificate Id="LokalDevelopmentPublisher"
+                         Name="LOKAL Development Publisher"
+                         BinaryRef="LokalDevCert"
+                         StoreLocation="localMachine"
+                         StoreName="trustedPublisher" />
+        <RegistryValue Root="HKLM"
+                       Key="Software\LOKAL\PowerPoint Add-in"
+                       Name="DevelopmentCertificateInstalled"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+    <Binary Id="LokalDevCert" SourceFile="$(CertificatePath)" />
+  </Fragment>
+</Wix>

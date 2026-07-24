@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOKAL — Teacher Dashboard</title>
+    <meta name="description" content="LOKAL Teacher Dashboard — Manage your classes, activities, reports, and settings">
+    <link rel="stylesheet" href="/shared/css/variables.css">
+    <link rel="stylesheet" href="css/dashboard.css?v=1.3">
+    <link rel="icon" type="image/png" href="/shared/assets/favicon-32x32.png">
+</head>
+<body>
+    <!-- Global Paper Background -->
+    <div class="page-bg">
+        <div class="page-bg-overlay"></div>
+    </div>
+
+    <!-- Auth Screen -->
+    <div id="auth-screen" class="auth-screen">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <img src="/shared/assets/android-chrome-512x512.png" alt="LOKAL Logo" width="110" height="110" style="margin-bottom:10px;">
+                <h1>LOKAL</h1>
+            </div>
+            <p class="auth-subtitle">Interactive Classroom System</p>
+
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form">
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <div style="position: relative;">
+                        <input type="password" id="login-password" placeholder="Enter your password" style="width: 100%; padding-right: 50px;" required>
+                        <button type="button" onclick="togglePassword('login-password', this)" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--primary-color); font-weight: 600; font-size: 0.85rem; padding: 0;">Show</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full" id="login-btn">Sign In</button>
+                <p class="auth-switch">Don't have an account? <a href="#" id="show-register">Create one</a></p>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" class="auth-form" style="display:none">
+                <div class="form-group">
+                    <label for="reg-display-name">Display Name</label>
+                    <input type="text" id="reg-display-name" placeholder="e.g. Prof. Santos" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-username">Username</label>
+                    <input type="text" id="reg-username" placeholder="Choose a username" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">Email</label>
+                    <input type="email" id="reg-email" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Password</label>
+                    <div style="position: relative;">
+                        <input type="password" id="reg-password" placeholder="Create a password" style="width: 100%; padding-right: 50px;" required>
+                        <button type="button" onclick="togglePassword('reg-password', this)" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--primary-color); font-weight: 600; font-size: 0.85rem; padding: 0;">Show</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full" id="register-btn">Create Account</button>
+                <p class="auth-switch">Already have an account? <a href="#" id="show-login">Sign in</a></p>
+            </form>
+            <div id="auth-error" class="auth-error" style="display:none"></div>
+        </div>
+    </div>
+
+    <!-- Dashboard Shell -->
+    <div id="dashboard" class="dashboard" style="display:none">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="/shared/assets/android-chrome-512x512.png" alt="LOKAL Logo" class="sidebar-brand-logo">
+                <span class="logo-text">LOKAL</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#/server" class="nav-item active" data-page="server" id="nav-server">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 7h.01M7 17h.01M11 7h6M11 17h6"/></svg>
+                    <span>Server</span>
+                </a>
+                <a href="#/classes" class="nav-item" data-page="classes" id="nav-classes">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <span>Classes</span>
+                </a>
+                <a href="#/reports" class="nav-item" data-page="reports" id="nav-reports">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span>Reports</span>
+                </a>
+                <a href="#/activities" class="nav-item" data-page="activities" id="nav-activities">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+                    <span>Activities</span>
+                </a>
+                <a href="#/settings" class="nav-item" data-page="settings" id="nav-settings">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    <span>Settings</span>
+                </a>
+                <a href="#/account" class="nav-item" data-page="account" id="nav-account">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span>Account</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header" id="header">
+                <div class="header-left" style="display: flex; align-items: center; gap: 8px;">
+                    <img src="/shared/assets/android-chrome-512x512.png" alt="LOKAL Logo" width="40" height="40" class="mobile-header-logo" style="display:none;">
+                    <button class="menu-toggle-btn" id="menu-toggle-btn" onclick="document.getElementById('dashboard').classList.toggle('sidebar-toggled')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
+                    <button class="back-btn" id="back-btn" style="display:none" onclick="window.history.back()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,18 9,12 15,6"/></svg>
+                    </button>
+                </div>
+                <h1 class="header-title" id="header-title">Server</h1>
+                <div class="header-right">
+                    <div class="header-avatar" id="header-avatar" onclick="toggleUserMenu()">
+                        <div class="avatar-circle" id="user-avatar">T</div>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
+                    </div>
+                    <div class="user-menu" id="user-menu" style="display:none">
+                        <div class="user-menu-header">
+                            <strong id="user-menu-name">Teacher</strong>
+                        </div>
+                        <a href="#" class="user-menu-item" onclick="logout()">Sign Out</a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content" id="page-content">
+                <!-- Dynamic content loaded here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Create Class Modal -->
+    <div class="modal-overlay" id="create-class-modal" style="display:none">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Create new class</h2>
+                <button class="modal-close" onclick="closeModal('create-class-modal')">&times;</button>
+            </div>
+            <form id="create-class-form">
+                <div class="form-group">
+                    <label>Class name</label>
+                    <input type="text" id="class-name-input" placeholder="eg. Math class 1" required>
+                </div>
+                <div class="form-group">
+                    <label>Class code</label>
+                    <input type="text" id="class-code-input" placeholder="4-8 alphanumerical characters, eg. MATH01" maxlength="8" required>
+                </div>
+                <div class="form-group">
+                    <label>Class avatar</label>
+                    <div class="avatar-picker">
+                        <div class="avatar-preview" id="avatar-preview" style="background-color: #F97316">
+                            <span id="avatar-letter">M</span>
+                        </div>
+                        <button type="button" class="btn btn-outline" onclick="cycleAvatarColor()">Change</button>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('create-class-modal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Confirm Modal -->
+    <div class="custom-modal-overlay" id="custom-confirm-modal" style="display:none">
+        <div class="custom-modal">
+            <h2 id="confirm-title">Confirm Action</h2>
+            <p id="confirm-message">Are you sure you want to proceed?</p>
+            <div class="custom-modal-actions">
+                <button class="btn btn-secondary" id="btn-confirm-cancel">Cancel</button>
+                <button class="btn btn-danger" id="btn-confirm-action">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Class Modal -->
+    <div class="modal-overlay" id="edit-class-modal" style="display:none">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Edit class</h2>
+                <button class="modal-close" onclick="closeModal('edit-class-modal')">&times;</button>
+            </div>
+            <form id="edit-class-form">
+                <input type="hidden" id="edit-class-id">
+                <div class="form-group">
+                    <label>Class name</label>
+                    <input type="text" id="edit-class-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Class code</label>
+                    <input type="text" id="edit-class-code" maxlength="8" required>
+                </div>
+                <div class="form-group">
+                    <label>Class avatar</label>
+                    <div class="avatar-picker">
+                        <div class="avatar-preview" id="edit-avatar-preview">
+                            <span id="edit-avatar-letter"></span>
+                        </div>
+                        <button type="button" class="btn btn-outline" onclick="cycleEditAvatarColor()">Change</button>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('edit-class-modal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Participant Modal -->
+    <div class="modal-overlay" id="add-participant-modal" style="display:none">
+        <div class="modal" style="max-width: 500px; width: 95%;">
+            <div class="modal-header">
+                <h2>Add participants</h2>
+                <button class="modal-close" onclick="closeModal('add-participant-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 12px; font-size: 14px; color: var(--text-primary);">Enter participant names below, one name per line.</p>
+                <textarea id="participant-names-input" placeholder="Enter names, one per line" style="width: 100%; height: 150px; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; resize: vertical; outline: none; box-sizing: border-box;"></textarea>
+            </div>
+            <div class="modal-actions" style="justify-content: flex-start; margin-top: 16px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-primary" onclick="submitAddParticipants()" style="border-radius: 6px;">Next</button>
+                <button type="button" class="btn btn-outline" onclick="closeModal('add-participant-modal')" style="border-radius: 6px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Participant Modal -->
+    <div class="modal-overlay" id="edit-participant-modal" style="display:none">
+        <div class="modal" style="max-width: 440px; width: 95%; border-radius: 12px; padding: 24px;">
+            <form id="edit-participant-form">
+                <input type="hidden" id="edit-participant-id">
+                <input type="hidden" id="edit-participant-avatar-url">
+                
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label style="font-weight: 600; font-size: 14px; margin-bottom: 8px; display: block; color: var(--text-primary);">Name</label>
+                    <input type="text" id="edit-participant-name" required style="width: 100%; padding: 10px 14px; border: 1px solid #E2E8F0; border-radius: 6px; font-size: 15px;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label style="font-weight: 600; font-size: 14px; margin-bottom: 8px; display: block; color: var(--text-primary);">Stars</label>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="display: flex; align-items: center; justify-content: center; border: 1px solid #E2E8F0; border-radius: 6px; padding: 8px 16px; min-width: 80px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.5" style="margin-right: 8px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                            <span id="edit-participant-stars-val" style="font-weight: 600; font-size: 16px;">0</span>
+                            <input type="hidden" id="edit-participant-stars">
+                        </div>
+                        <button type="button" class="star-btn minus" style="width: 28px; height: 28px; font-size: 16px; border-radius: 6px;" onclick="adjustEditModalStars(-1)">-</button>
+                        <button type="button" class="star-btn plus" style="width: 28px; height: 28px; font-size: 16px; border-radius: 6px;" onclick="adjustEditModalStars(1)">+</button>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 32px;">
+                    <label style="font-weight: 600; font-size: 14px; margin-bottom: 8px; display: block; color: var(--text-primary);">Avatar</label>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div id="edit-participant-avatar-circle" style="width: 48px; height: 48px; font-size: 20px; border-radius: 50%; background: #a0aec0; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; overflow: hidden;">
+                            <img id="edit-participant-avatar-img" src="" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                            <span id="edit-participant-avatar-letter">K</span>
+                        </div>
+                        <button type="button" class="btn btn-outline" style="padding: 6px 12px; font-size: 14px; border-radius: 6px; font-weight: 600;">Change</button>
+                    </div>
+                </div>
+
+                <div class="modal-actions" style="justify-content: flex-start; gap: 12px; border-top: none; padding: 0;">
+                    <button type="submit" class="btn btn-primary" style="background-color: var(--primary); padding: 10px 24px; border-radius: 6px; font-weight: 600;">Save</button>
+                    <button type="button" class="btn btn-outline" onclick="closeModal('edit-participant-modal')" style="padding: 10px 24px; border-radius: 6px; font-weight: 600;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Create / Edit Group Modal -->
+    <div class="modal-overlay" id="group-form-modal" style="display:none">
+        <div class="modal group-form-modal">
+            <div class="modal-header">
+                <div>
+                    <h2 id="group-modal-title">Create group</h2>
+                    <p class="modal-subtitle">Organize participants into a named class group.</p>
+                </div>
+                <button class="modal-close" type="button" aria-label="Close" onclick="closeModal('group-form-modal')">&times;</button>
+            </div>
+            <form id="group-form" onsubmit="window.saveGroup(event)">
+                <input type="hidden" id="group-id-input">
+                <input type="hidden" id="group-color-input" value="#0B1F1C">
+                <div class="form-group">
+                    <label for="group-name-input">Group name</label>
+                    <input type="text" id="group-name-input" maxlength="60" placeholder="e.g. Blue Team" autocomplete="off" required>
+                </div>
+                <fieldset class="group-color-fieldset">
+                    <legend>Group color</legend>
+                    <div class="group-color-palette">
+                        <button type="button" class="group-color-choice" data-color="#334155" style="--choice-color:#334155" aria-label="Slate" onclick="window.selectGroupColor(this.dataset.color)"></button>
+                        <button type="button" class="group-color-choice" data-color="#12B981" style="--choice-color:#12B981" aria-label="Emerald" onclick="window.selectGroupColor(this.dataset.color)"></button>
+                        <button type="button" class="group-color-choice" data-color="#F59E0B" style="--choice-color:#F59E0B" aria-label="Amber" onclick="window.selectGroupColor(this.dataset.color)"></button>
+                        <button type="button" class="group-color-choice" data-color="#EC4899" style="--choice-color:#EC4899" aria-label="Pink" onclick="window.selectGroupColor(this.dataset.color)"></button>
+                        <button type="button" class="group-color-choice" data-color="#0B1F1C" style="--choice-color:#0B1F1C" aria-label="LOKAL green" onclick="window.selectGroupColor(this.dataset.color)"></button>
+                        <button type="button" class="group-color-choice" data-color="#0EA5E9" style="--choice-color:#0EA5E9" aria-label="Sky blue" onclick="window.selectGroupColor(this.dataset.color)"></button>
+                    </div>
+                </fieldset>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary" id="group-save-button">Save group</button>
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('group-form-modal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/server.js?v=1.0"></script>
+    <script src="js/classes.js"></script>
+    <script src="js/reports.js"></script>
+    <script src="js/activities.js"></script>
+    <script src="js/level-icons.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/account.js"></script>
+</body>
+</html>
